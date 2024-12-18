@@ -23,7 +23,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.18;
 
-import {VRFConsumerBaseV2Plus} from "@chainlink/contracts@1.2.0/src/v0.8/vrf/dev/VRFConsumerBaseV2Plus.sol";
+import {VRFConsumerBaseV2Plus} from "@chainlink/contracts@1.1.1/src/v0.8/vrf/dev/VRFConsumerBaseV2Plus.sol";
 
 /**
  * @title Sample for Raffle Smart Contract
@@ -31,7 +31,7 @@ import {VRFConsumerBaseV2Plus} from "@chainlink/contracts@1.2.0/src/v0.8/vrf/dev
  * @notice This contract is for creating a sample Raffle
  * @dev Implements ChainLink VRFv2.5
  */
-
+ 
 contract Raffle {
     /* Errors */
     error Raffle__sendMoreToEnterRaffle();
