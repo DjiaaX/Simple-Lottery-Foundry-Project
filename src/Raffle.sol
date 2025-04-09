@@ -129,9 +129,9 @@ contract Raffle is VRFConsumerBaseV2Plus {
      * 3. The contract has ETH.
      * 4. There are players registered.
      * 5. Implicity, your subscription is funded with LINK.
-     * @param - ignored
-     * @return upKeepNeeded - true if its time to restart the lottery
-     * @return - ignored
+     * - ignored
+     * upKeepNeeded - true if its time to restart the lottery
+     * - ignored
      */
     function checkUpkeep(bytes memory /* checkdata */ )
         public
@@ -184,18 +184,6 @@ contract Raffle is VRFConsumerBaseV2Plus {
             revert Raffle__TransferFailed();
         }
     }
-
-    // function fulfillRandomWords(uint256 /* requestId */, uint256[] calldata randomWords) internal override {
-    //     uint256 indexOfWinner = randomWords[0] % s_players.length;
-    //     address payable addressOfWinner = s_players[indexOfWinner];
-    //     s_recentWinner = addressOfWinner;
-    //     emit RaffleWinnerSelectedAndPaid(addressOfWinner, address(this).balance);
-    //     s_players = new address payable[](0);
-    //     s_lastTimeStamp = block.timestamp;
-    //     s_raffleState = RaffleState.OPEN;
-    //     (bool success,) = addressOfWinner.call{value: address(this).balance}("");
-    //     if (!success) revert Raffle__TransferFailed();
-    // }
 
     /* Gather Function */
     function getEntranceFee() public view returns (uint256) {
