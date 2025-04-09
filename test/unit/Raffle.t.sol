@@ -231,6 +231,7 @@ contract RaffleTest is Test, CodeConstants {
         VRFCoordinatorV2_5Mock(vrfCoordinator).fulfillRandomWords(randomRequestId, address(raffle));
     }
 
+    event LogUint(string message, uint256 value); // Logging event
     function testFulfillrandomWordsPicksAWinnerResetsAndSendsMoney() public raffleEntered skipFork {
         // Arrange
         uint256 additionalEntrance = 3; // 4 total
@@ -249,6 +250,7 @@ contract RaffleTest is Test, CodeConstants {
         vm.recordLogs();
         raffle.performUpKeep("");
         Vm.Log[] memory entries = vm.getRecordedLogs();
+        // bytes32 requestid = entries[1].topics[1];
         bytes32 requestid = entries[1].topics[1];
         VRFCoordinatorV2_5Mock(vrfCoordinator).fulfillRandomWords(uint256(requestid), address(raffle));
 
@@ -259,6 +261,14 @@ contract RaffleTest is Test, CodeConstants {
         uint256 winnerBalance = recentWinner.balance;
         uint256 endingTimeStamp = raffle.getLastTimeStamp();
         uint256 prize = entranceFee * (additionalEntrance + 1);
+
+        emit LogUint("Winner balance", winnerBalance);
+        emit LogUint("Expected balance", winnerStartingBalance + prize);
+        emit LogUint("Recent Winner Address", uint256(uint160(recentWinner)));
+        emit LogUint("Expected Winner Address", uint256(uint160(expectedWinner)));
+        emit LogUint("Actual Raffle State", uint256(raffleState));
+        emit LogUint("Starting Timestamp", startingTimeStamp);
+        emit LogUint("Ending Timestamp", endingTimeStamp);
 
         assert(recentWinner == expectedWinner);
         assert(uint256(raffleState) == 0);
