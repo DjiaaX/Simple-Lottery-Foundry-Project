@@ -9,4 +9,4 @@ pragma solidity ^0.8.19;
 // fuzzing
 // stateful fuzz
 // stateless fuzzing
-// formal verification 
+// formal verification

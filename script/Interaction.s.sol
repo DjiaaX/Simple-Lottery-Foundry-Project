@@ -63,7 +63,6 @@ contract FundSubscriptionId is Script, CodeConstants {
     }
 } */
 
-
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
@@ -109,7 +108,9 @@ contract FundSubscription is Script, CodeConstants {
         fundSubscription(vrfCoordinator, subscriptionId, linkToken, account);
     }
 
-    function fundSubscription(address vrfCoordinator, uint256 subscriptionId, address linkToken, address account) public {
+    function fundSubscription(address vrfCoordinator, uint256 subscriptionId, address linkToken, address account)
+        public
+    {
         console.log("Funding subscription: ", subscriptionId);
         console.log("Using vrfCoordinator: ", vrfCoordinator);
         console.log("On Chain ID: ", block.chainid);
@@ -139,7 +140,7 @@ contract AddConsumer is Script {
         addConsumer(mostRecentDeployed, vrfCoordinator, subId, account);
     }
 
-    function addConsumer(address contractToAddToVrf, address vrfCoordinator, uint256 subId,address account) public{
+    function addConsumer(address contractToAddToVrf, address vrfCoordinator, uint256 subId, address account) public {
         console.log("Adding consumer contract");
         console.log("to vrfCoordinator: ", vrfCoordinator);
         console.log("On Chainid", block.chainid);

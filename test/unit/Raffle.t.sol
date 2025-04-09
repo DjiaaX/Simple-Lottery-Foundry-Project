@@ -56,7 +56,7 @@ contract RaffleTest is Test, CodeConstants {
         // Act & Asset
         vm.expectRevert(Raffle.Raffle__SendMoreToEnterRaffle.selector);
         raffle.enterRaffle();
-    } 
+    }
 
     function testRaffleRecordPlayerWhenTheyEnter() public {
         // Arrange
@@ -69,7 +69,7 @@ contract RaffleTest is Test, CodeConstants {
     }
 
     function testEnteringRaffleEmitsEvent() public {
-        // Arrange 
+        // Arrange
         vm.prank(PLAYER);
         // Act
         vm.expectEmit(true, false, false, false, address(raffle));
@@ -98,7 +98,7 @@ contract RaffleTest is Test, CodeConstants {
         vm.roll(block.number + 1);
 
         // Act
-        (bool upkeepNeeded, ) = raffle.checkUpkeep("");
+        (bool upkeepNeeded,) = raffle.checkUpkeep("");
 
         // Assert
         assert(!upkeepNeeded);
@@ -122,7 +122,7 @@ contract RaffleTest is Test, CodeConstants {
         assert(upkeepNeeded == false);
     } */
 
-   function testCheckUpkeepReturnsFalseIfRaffleIsntOpen() public {
+    function testCheckUpkeepReturnsFalseIfRaffleIsntOpen() public {
         // Arrange
         vm.prank(PLAYER);
         raffle.enterRaffle{value: entranceFee}();
@@ -143,7 +143,7 @@ contract RaffleTest is Test, CodeConstants {
         vm.roll(block.number + 1);
 
         // Act
-        (bool upkeepNeeded, ) = raffle.checkUpkeep("");
+        (bool upkeepNeeded,) = raffle.checkUpkeep("");
 
         // Assert
         assert(!upkeepNeeded);
@@ -157,7 +157,7 @@ contract RaffleTest is Test, CodeConstants {
         vm.roll(block.number + 1);
 
         // Act
-        (bool upkeepNeeded, ) = raffle.checkUpkeep("");
+        (bool upkeepNeeded,) = raffle.checkUpkeep("");
 
         // Assert
         assertTrue(upkeepNeeded);
@@ -187,12 +187,7 @@ contract RaffleTest is Test, CodeConstants {
 
         // Act / Assert
         vm.expectRevert(
-            abi.encodeWithSelector(
-                Raffle.Raffle__upkeepNotNeeded.selector,
-                currentBalance,
-                numPlayers,
-                rState
-            )
+            abi.encodeWithSelector(Raffle.Raffle__upkeepNotNeeded.selector, currentBalance, numPlayers, rState)
         );
         raffle.performUpKeep("");
     }
@@ -220,18 +215,24 @@ contract RaffleTest is Test, CodeConstants {
 
     /* FulfillRandomWords */
     modifier skipFork() {
-        if(block.chainid != LOCAL_CHAIN_ID) {
+        if (block.chainid != LOCAL_CHAIN_ID) {
             return;
         }
         _;
     }
-    function testFulfillrandomWordsCanOnlyBeCalledAfterPerformUpkeep(uint256 randomRequestId) public raffleEntered skipFork {
+
+    function testFulfillrandomWordsCanOnlyBeCalledAfterPerformUpkeep(uint256 randomRequestId)
+        public
+        raffleEntered
+        skipFork
+    {
         // Arrange / Act / Assert
         vm.expectRevert(VRFCoordinatorV2_5Mock.InvalidRequest.selector);
         VRFCoordinatorV2_5Mock(vrfCoordinator).fulfillRandomWords(randomRequestId, address(raffle));
     }
 
     event LogUint(string message, uint256 value); // Logging event
+
     function testFulfillrandomWordsPicksAWinnerResetsAndSendsMoney() public raffleEntered skipFork {
         // Arrange
         uint256 additionalEntrance = 3; // 4 total
@@ -242,7 +243,7 @@ contract RaffleTest is Test, CodeConstants {
             address newPlayer = address(uint160(i));
             hoax(newPlayer, 1 ether);
             raffle.enterRaffle{value: entranceFee}();
-        }       
+        }
         uint256 startingTimeStamp = raffle.getLastTimeStamp();
         uint256 winnerStartingBalance = expectedWinner.balance;
 

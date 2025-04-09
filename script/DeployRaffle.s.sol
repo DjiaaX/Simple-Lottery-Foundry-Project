@@ -10,20 +10,20 @@ contract DeployRaffle is Script {
     function run() public {
         deployContract();
     }
-    
-    function deployContract() public returns(Raffle, HelperConfig) {
+
+    function deployContract() public returns (Raffle, HelperConfig) {
         HelperConfig helperConfig = new HelperConfig();
         // local -> deploy mocks, get local config
         // sepolia -> get sepolia config
         HelperConfig.NetworkConfig memory config = helperConfig.getConfig();
 
-        if(config.subscriptionId == 0) {
-          // Create Subscription
+        if (config.subscriptionId == 0) {
+            // Create Subscription
             CreateSubscription createSubscription = new CreateSubscription();
             /* (config.subscriptionId, config.vrfCoordinator) = 
                 createSubscription.createSubscription(config.vrfCoordinator); */
-             config.subscriptionId = createSubscription.createSubscription(config.vrfCoordinator, config.account);
-                // Fund It!!
+            config.subscriptionId = createSubscription.createSubscription(config.vrfCoordinator, config.account);
+            // Fund It!!
 
             FundSubscription fundSubscription = new FundSubscription();
             fundSubscription.fundSubscription(config.vrfCoordinator, config.subscriptionId, config.link, config.account);
