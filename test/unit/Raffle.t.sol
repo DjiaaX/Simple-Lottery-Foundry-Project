@@ -9,6 +9,7 @@ import {Vm} from "forge-std/Vm.sol";
 import {VRFCoordinatorV2_5Mock} from "@chainlink/contracts/src/v0.8/vrf/mocks/VRFCoordinatorV2_5Mock.sol";
 import {CodeConstants} from "../../script/HelperConfig.s.sol";
 import {LinkToken} from "../../test/mocks/LinkToken.sol";
+import {console} from "forge-std/console.sol";
 
 contract RaffleTest is Test, CodeConstants {
     Raffle public raffle;
@@ -103,24 +104,6 @@ contract RaffleTest is Test, CodeConstants {
         // Assert
         assert(!upkeepNeeded);
     }
-
-    /* function testCheckUpkeepRetursFalseIfRaffleIsntOpen() public {
-        // Arrange
-        vm.prank(PLAYER);
-        raffle.enterRaffle{value: entranceFee}();
-        vm.warp(block.timestamp + interval + 1);
-        vm.roll(block.number + 1);
-        raffle.performUpKeep("");
-
-        // Act 
-        (bool upkeepNeeded, ) = raffle.checkUpkeep("");
-        assert(upkeepNeeded == true); // Add this assertion
-
-        // Assert
-        Raffle.RaffleState raffleState = raffle.getRaffleState();
-        assert(raffleState == Raffle.RaffleState.CALCULATING);
-        assert(upkeepNeeded == false);
-    } */
 
     function testCheckUpkeepReturnsFalseIfRaffleIsntOpen() public {
         // Arrange
@@ -231,7 +214,6 @@ contract RaffleTest is Test, CodeConstants {
         VRFCoordinatorV2_5Mock(vrfCoordinator).fulfillRandomWords(randomRequestId, address(raffle));
     }
 
-    event LogUint(string message, uint256 value); // Logging event
 
     function testFulfillrandomWordsPicksAWinnerResetsAndSendsMoney() public raffleEntered skipFork {
         // Arrange
@@ -259,18 +241,11 @@ contract RaffleTest is Test, CodeConstants {
         address recentWinner = raffle.getRecentWinner();
         Raffle.RaffleState raffleState = raffle.getRaffleState();
 
+        console.log("Timestamp:", block.timestamp);
+
         uint256 winnerBalance = recentWinner.balance;
         uint256 endingTimeStamp = raffle.getLastTimeStamp();
         uint256 prize = entranceFee * (additionalEntrance + 1);
-
-        emit LogUint("Winner balance", winnerBalance);
-        emit LogUint("Expected balance", winnerStartingBalance + prize);
-        emit LogUint("Recent Winner Address", uint256(uint160(recentWinner)));
-        emit LogUint("Expected Winner Address", uint256(uint160(expectedWinner)));
-        emit LogUint("Actual Raffle State", uint256(raffleState));
-        emit LogUint("Starting Timestamp", startingTimeStamp);
-        emit LogUint("Ending Timestamp", endingTimeStamp);
-
         assert(recentWinner == expectedWinner);
         assert(uint256(raffleState) == 0);
         assert(winnerBalance == winnerStartingBalance + prize);
