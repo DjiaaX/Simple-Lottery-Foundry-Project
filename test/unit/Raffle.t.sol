@@ -214,7 +214,6 @@ contract RaffleTest is Test, CodeConstants {
         VRFCoordinatorV2_5Mock(vrfCoordinator).fulfillRandomWords(randomRequestId, address(raffle));
     }
 
-
     function testFulfillrandomWordsPicksAWinnerResetsAndSendsMoney() public raffleEntered skipFork {
         // Arrange
         uint256 additionalEntrance = 3; // 4 total
